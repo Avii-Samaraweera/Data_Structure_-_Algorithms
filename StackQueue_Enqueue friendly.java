@@ -1,32 +1,67 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
 
-class StackQueue {
-    Queue<Integer> q1 = new LinkedList<>();
-    Queue<Integer> q2 = new LinkedList<>();
-
-    void push(int x) {
-        q1.add(x); // enqueue-friendly
+public class StackQueue {
+    private Stack<Integer> s1;
+    private Stack<Integer> s2;
+    
+    public StackQueue() {
+        s1 = new Stack<>();
+        s2 = new Stack<>();
     }
-
-    int pop() {
-        if (q1.isEmpty()) return -1;
-
-        while (q1.size() > 1) {
-            q2.add(q1.poll());
+    
+    // Enqueue operation - O(1) time complexity
+    public void enqueue(int x) {
+        s1.push(x);
+    }
+    
+    // Dequeue operation - O(n) worst case, O(1) amortized
+    public int dequeue() {
+        if (s1.isEmpty() && s2.isEmpty()) {
+            throw new RuntimeException("Queue is empty");
         }
-
-        int val = q1.poll();
-
-        // swap queues
-        Queue<Integer> temp = q1;
-        q1 = q2;
-        q2 = temp;
-
-        return val;
+        
+        // If s2 is empty, transfer all elements from s1 to s2
+        if (s2.isEmpty()) {
+            while (!s1.isEmpty()) {
+                s2.push(s1.pop());
+            }
+        }
+        
+        return s2.pop();
     }
-
-    boolean isEmpty() {
-        return q1.isEmpty();
+    
+    // Peek operation - O(n) worst case, O(1) amortized
+    public int peek() {
+        if (s1.isEmpty() && s2.isEmpty()) {
+            throw new RuntimeException("Queue is empty");
+        }
+        
+        // If s2 is empty, transfer all elements from s1 to s2
+        if (s2.isEmpty()) {
+            while (!s1.isEmpty()) {
+                s2.push(s1.pop());
+            }
+        }
+        
+        return s2.peek();
+    }
+    
+    // Check if queue is empty
+    public boolean isEmpty() {
+        return s1.isEmpty() && s2.isEmpty();
+    }
+    
+    // Get size of queue
+    public int size() {
+        return s1.size() + s2.size();
+    }
+    
+    // Display all elements
+    public void display() {
+        if (isEmpty()) {
+            System.out.println("Queue is empty");
+            return;
+        }
+        System.out.println("Queue elements - s2 (front): " + s2 + " | s1 (back): " + s1);
     }
 }

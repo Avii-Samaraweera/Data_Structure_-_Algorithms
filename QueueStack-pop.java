@@ -1,36 +1,63 @@
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class QueueStackPopFriendly {
-
-    Stack<Integer> stack1 = new Stack<>();
-    Stack<Integer> stack2 = new Stack<>();
-
-    // Enqueue operation 
-    public void enqueue(int x) {
-
-        // Move all elements from stack1 to stack2
-        while (!stack1.isEmpty()) {
-            stack2.push(stack1.pop());
-        }
-
-        // Push new element into stack1
-        stack1.push(x);
-
-        // Move elements back to stack1
-        while (!stack2.isEmpty()) {
-            stack1.push(stack2.pop());
-        }
-
-        System.out.println(x + " enqueued");
+public class QueueStack {
+    private Queue<Integer> q1;
+    private Queue<Integer> q2;
+    
+    public QueueStack() {
+        q1 = new LinkedList<>();
+        q2 = new LinkedList<>();
     }
-
-    // Dequeue operation 
-    public int dequeue() {
-
-        if (stack1.isEmpty()) {
-            System.out.println("Queue is empty");
-            return -1;
+    
+    // Push operation - O(n) time complexity
+    public void push(int x) {
+        // Add new element to q2
+        q2.add(x);
+        
+        // Move all elements from q1 to q2
+        while (!q1.isEmpty()) {
+            q2.add(q1.remove());
         }
-
-        return stack1.pop();
+        
+        // Swap q1 and q2
+        Queue<Integer> temp = q1;
+        q1 = q2;
+        q2 = temp;
     }
+    
+    // Pop operation - O(1) time complexity
+    public int pop() {
+        if (q1.isEmpty()) {
+            throw new RuntimeException("Stack is empty");
+        }
+        return q1.remove();
+    }
+    
+    // Peek operation - O(1) time complexity
+    public int peek() {
+        if (q1.isEmpty()) {
+            throw new RuntimeException("Stack is empty");
+        }
+        return q1.peek();
+    }
+    
+    // Check if stack is empty
+    public boolean isEmpty() {
+        return q1.isEmpty();
+    }
+    
+    // Get size of stack
+    public int size() {
+        return q1.size();
+    }
+    
+    // Display all elements
+    public void display() {
+        if (q1.isEmpty()) {
+            System.out.println("Stack is empty");
+            return;
+        }
+        System.out.println("Stack elements (top to bottom): " + q1);
+    }
+}

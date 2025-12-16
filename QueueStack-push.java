@@ -10,36 +10,54 @@ public class QueueStack {
         q2 = new LinkedList<>();
     }
     
-    // Push operation - O(n) time complexity
+    // Push operation - O(1) time complexity
     public void push(int x) {
-        // Add new element to q2
-        q2.add(x);
+        q1.add(x);
+    }
+    
+    // Pop operation - O(n) time complexity
+    public int pop() {
+        if (q1.isEmpty()) {
+            throw new RuntimeException("Stack is empty");
+        }
         
-        // Move all elements from q1 to q2
-        while (!q1.isEmpty()) {
+        // Move all elements except last from q1 to q2
+        while (q1.size() > 1) {
             q2.add(q1.remove());
         }
+        
+        // Get the last element (top of stack)
+        int top = q1.remove();
         
         // Swap q1 and q2
         Queue<Integer> temp = q1;
         q1 = q2;
         q2 = temp;
+        
+        return top;
     }
     
-    // Pop operation - O(1) time complexity
-    public int pop() {
-        if (q1.isEmpty()) {
-            throw new RuntimeException("Stack is empty");
-        }
-        return q1.remove();
-    }
-    
-    // Peek operation - O(1) time complexity
+    // Peek operation - O(n) time complexity
     public int peek() {
         if (q1.isEmpty()) {
             throw new RuntimeException("Stack is empty");
         }
-        return q1.peek();
+        
+        // Move all elements except last from q1 to q2
+        while (q1.size() > 1) {
+            q2.add(q1.remove());
+        }
+        
+        // Get the last element without removing
+        int top = q1.peek();
+        q2.add(q1.remove());
+        
+        // Swap q1 and q2
+        Queue<Integer> temp = q1;
+        q1 = q2;
+        q2 = temp;
+        
+        return top;
     }
     
     // Check if stack is empty
@@ -58,6 +76,6 @@ public class QueueStack {
             System.out.println("Stack is empty");
             return;
         }
-        System.out.println("Stack elements (top to bottom): " + q1);
+        System.out.println("Stack elements (bottom to top): " + q1);
     }
 }
